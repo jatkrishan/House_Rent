@@ -12,29 +12,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.json());
 
 
-// // Register a new user
-// app.post('/register', async (req, res) => {
-//   const { name, username, email, password,role} = req.body;
-
-//   try {
-//     // Hash the password
-
-//     await model.create({
-//         name:name,
-//         username:username,
-//         email:email,
-//         password : bcrypt.hashSync(password,8),
-//         role
-//     })
-//     res.status(200).json({ sucess:true, message:"signUp successful"}).end();
-    
-   
-//   }catch (err) {
-//     console.error('Password hashing error:', err);
-//     return res.status(500).json({ err});
-//   }
-// });
-
+require("./Routes/user.route")(app)
 require("./Routes/auth.route")(app)
 
 

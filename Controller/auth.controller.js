@@ -12,7 +12,7 @@ exports.signup =  async (req, res) => {
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
-
+    role: req.body.role
   })
    try{
      if(user){
@@ -27,7 +27,7 @@ exports.signup =  async (req, res) => {
 
 exports.signin =  async (req, res) => {
    
-   var {email, password} = req.body;
+   const {email, password,} = req.body;
   
  try{
 
@@ -37,15 +37,17 @@ exports.signin =  async (req, res) => {
   }
 
 
-   const user = await User.findOne({email})
+   const user = await User.findOne({where: {email: email}})
 
-  if(!user ){
-    return res.status(400).json({sucess:false, message:'Error! user not found'}).end()
-}
 
+    if(!user ){
+    return res.status(400).json({sucess:false, message:'Error! User not found'}).end()
+   }
+    
      let isValid = bcrypt.compareSync(password, user.password)
+    
 
-if(!isValid){
+if(isValid == null){
   return res.status(400).json({sucess:false, message:'Error! passwrd is invalid'}).end()
 }
 
@@ -53,7 +55,7 @@ const token = jwt.sign({id: user.id}, authKeys.authKeyss, {
   expiresIn: 86400
 })
     
-   res.status(200).json({name: user.name, id: user.id, accessToken: token})
+   res.status(200).json({name: user.name, id: user.id, role: user.role, accessToken: token})
    
  }catch(error){
   return res.status(500).json({sucess:false, message:'Error Occured in SignUp Process' }).end()
