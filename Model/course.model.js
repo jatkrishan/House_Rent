@@ -9,7 +9,11 @@ module.exports  = db.define("Course", {
          autoIncrement: true,
          primaryKey: true
     },
-    title: {
+    courseName: {
+        type: DataTypes.STRING,
+        notNull:true,
+    },
+    title:{
         type: DataTypes.STRING,
         notNull:true,
     },
@@ -18,7 +22,7 @@ module.exports  = db.define("Course", {
               notNull:true
     },
     price: {
-        type: DataTypes.DOUBLE,
+        type: DataTypes.FLOAT,
         notNull:true
     }
 

@@ -13,7 +13,7 @@ module.exports  = db.define("User", {
           type: DataTypes.STRING,
           notNull: true
      },
-     username:{
+     userName:{
           type: DataTypes.STRING,
           notNull: true
           

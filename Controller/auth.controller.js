@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt")
 const authKeys = require("../Config/authKey.config")
 const jwt = require("jsonwebtoken")
-const User = require("../Model/user.model")
+const User = require("../Model/User.model")
 
 
 
@@ -19,7 +19,7 @@ exports.signup =  async (req, res) => {
         res.status(200).json({sucess: true, message: "User registration sucessfully"}).end()
      }
    }catch(error){
-    res.status(400).json({sucess: false, message: "Error Occured in SignUp Process", error}).end()
+    return res.status(400).json({sucess: false, message: "Error Occured in SignUp Process", error}).end()
    }
 
 }
@@ -31,25 +31,24 @@ exports.signin =  async (req, res) => {
   
  try{
 
-  if(!email || !password){
+  if(!email || !password)  res.status(400).json({sucess: false, message: "Faild! please enter email & password"}).end()
+ 
 
-    return res.status(400).json({sucess: false, message: "Faild! please enter email & password"}).end()
-  }
 
 
    const user = await User.findOne({where: {email: email}})
 
 
-    if(!user ){
-    return res.status(400).json({sucess:false, message:'Error! User not found'}).end()
-   }
+    if(!user ) res.status(400).json({sucess:false, message:'Error! User not found'}).end()
+  
+   
     
      let isValid = bcrypt.compareSync(password, user.password)
     
 
-if(isValid == null){
-  return res.status(400).json({sucess:false, message:'Error! passwrd is invalid'}).end()
-}
+if(isValid == null)  res.status(400).json({sucess:false, message:'Error! passwrd is invalid'}).end()
+
+
 
 const token = jwt.sign({id: user.id}, authKeys.authKeyss, {
   expiresIn: 86400

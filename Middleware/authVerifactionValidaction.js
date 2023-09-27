@@ -1,5 +1,5 @@
 
-const User = require("../Model/user.model")
+const User = require("../Model/User.model")
 
 exports.validactionVerify = async function (req, res, next){
          

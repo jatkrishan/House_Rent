@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const configKey = require("../Config/authKey.config")
-const User = require("../Model/user.model")
-const constent = require("../unites/users") 
+const User = require("../Model/User.model")
+const constent = require("../unites/Users") 
 
 exports.isValidUser = async function(req, res, next){
     let token = req.headers["x-access-token"]
@@ -34,6 +34,25 @@ exports.isValidUser = async function(req, res, next){
     }
 
    
+}
+
+
+
+exports.isAdminAndAcademy = async function async(req, res, next){
+   
+    try{
+         let isValidAdmin = await User.findOne({where:{id: req.userId}})
+         
+
+         if(isValidAdmin.dataValues.role == constent.userType.student)
+        return res.status(400).json({sucess: false, message: "Faild! only admin and academy are allowed"})
+
+             next()
+
+    }catch(error){
+       return res.status(500).json({sucess: false, message: "Error Occured in server Process"})
+    }
+
 }
 
 

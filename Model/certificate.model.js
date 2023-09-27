@@ -3,13 +3,12 @@ const db = require("../Config/db.config")
 
 module.exports = db.define("Test", {
      
-  id:  {
-     type: DataTypes.BIGINT,
-    notNull: true,
-    autoincrement: true,
-    primaryKey: true
-}}
-,
+  completionDate: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },},
 {timestamp: true})
 
 db.sync({alter: true})
+
+

@@ -1,25 +1,25 @@
-const User = require("../Model/user.model")
-const convertUserObject = require("../unites/convertUserObj")
+const User = require("../Model/User.model")
 
-exports.getByIdUser = async function(req, res){
+
+exports.getUsrById = async function(req, res){
       
-    const email = req.params.emailId;
-
-
-    if(!email){
-        return  res.status(400).json({sucess: true, message: "Faild! please enter a id"})
-    }
-    try{
-        let user = await User.findOne({attributes: ["name", "username", "id", "role"], where: {email}})
-      
-        if(!user){
-            return  res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
-        }
+    const {userId} = req.params.userId;
      
-        res.status(200).json({sucess: true, user})
+    
+    try{
+
+        if(!userId) return  res.status(400).json({sucess: true, message: "Faild! user not found"})
+
+
+        let isUser = await User.findOne({attributes: ["name", "username", "id", "role"], where: {email:userId}})
+      
+        if(!isUser) return  res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
+        
+        
+        res.status(200).json({sucess: true, isUser})
 
     }catch(error){
-    res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
+        return  res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
     }
     
  
@@ -33,34 +33,32 @@ exports.getAllUser = async function(req, res){
 
         let user = await User.findAll({attributes: ["name", "username", "id", "role", "email"]})
       
-        if(user){
-             res.status(200).json({sucess: true, user})
-            }
+        if(user) return res.status(200).json({sucess: true, user})
+           
 
     }catch(error){
-        res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
+        return res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
     }
 
 }
 
-exports.getByIdAdmin = async function(req, res){
+exports.getUserById = async function(req, res){
       
-    const email = req.params.emailId;
+    const {userId} = req.params.userId;
 
-    if(!email){
-        return  res.status(400).json({sucess: true, message: "Faild! please enter a id"})
-    }
-    try{
-        let user = await User.findOne({attributes: ["name", "username", "id", "role"], where: {email}})
+    if(!userId)  return  res.status(400).json({sucess: true, message: "Faild! user not found"})
       
-        if(!user){
-            return  res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
-        }
-     
+    
+    try{
+        let user = await User.findOne({attributes: ["name", "username", "id", "role"], where: {email: userId}})
+      
+        if(!user)   return  res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
+          
+        
         res.status(200).json({sucess: true, user})
 
     }catch(error){
-    res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
+        return res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
     }
     
 
@@ -69,49 +67,51 @@ exports.getByIdAdmin = async function(req, res){
 
 
 
-exports.updateByIdAdmin = async function(req, res){
-        const {name, username, role} = req.body;
+exports.updateUserById = async function(req, res){
+       const {userId} = req.params.userId
+        const {name, userName, role} = req.body;
        
     try{
 
-        let user = await User.findOne({where: {email: req.params.emailId}})
+        let user = await User.update({where: {email: userId}})
       
-        if(!user){
-       
-           return res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
-        }
+        if(!user)  return res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
        
       
-        let updateUser = await User.update({name:name}, {where: {email: req.params.emailId}})
+        let updateUser = await User.update({name:name, userName, role: role}, {where: {email: userId}})
 
       
-        if(updateUser){
+        if(!updateUser) return  res.status(400).json({sucess: true, message: "Faild! user not found"})
            
-            res.status(200).json({sucess: true , message: "User update sucessfully"})
-        }
+          
+       return res.status(200).json({sucess: true , message: "User update sucessfully"})
                                                         
    
     }catch(error){
-    res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
+        return res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
     }
 
 }
 
 
-exports.deleteByIdAdmin = async function(req, res){
+exports.destroyUserById = async function(req, res){
+    const {userId} = req.params.userId
    
-    try{
-        let user = await User.destroy({where: {email: req.params.emailId}})
-        if(!user){
-            return res.status(400).json({sucess: true, message: "Faild! please enter valid id"})
-        }
-           
+try{
+    
+    if(!userId)  return res.status(400).json({sucess: true, message: "Faild! please enter a valid id"})
+
+    let user = await User.destroy({where: {email: userId}})
+  
+    if(!user)  return res.status(400).json({sucess: true, message: "Faild! user not found"})
        
-        res.status(200).json({sucess: true , message: "User delete sucessfully"})
-   
-    }catch(error){
-    res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
-    }
+      if(user)  return res.status(200).json({sucess: true , message: "User delete sucessfully"})
+  
+                                                    
+
+}catch(error){
+return res.status(500).json({sucess: false, message: "Error! Occured by server side", error})
+}
     
 
 }

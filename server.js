@@ -12,10 +12,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.json());
 
 
-require("./Routes/user.route")(app)
-require("./Routes/auth.route")(app)
+require("./Routes/User.route")(app)
+require("./Routes/Auth.route")(app)
 
 
 app.listen(dbConfig.PORT, () => {
+   
     console.log("Application is started " , dbConfig.PORT)
 })

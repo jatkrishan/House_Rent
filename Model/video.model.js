@@ -12,7 +12,7 @@ module.exports = db.define("Course", {
         type: DataTypes.STRING,
         notNull: true
     },
-    courseurl: {
+    courseUrl: {
         type: DataTypes.STRING,
         notNull: true,
     }
